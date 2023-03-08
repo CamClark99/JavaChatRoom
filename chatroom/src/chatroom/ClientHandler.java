@@ -13,8 +13,11 @@ public class ClientHandler implements Runnable
 	//RESEARCH THESE OBJECTS!!!
 	private ServerSocket listener;
 	private Socket client;
+	
 	private DataInputStream in; //Input stream from client
+	
 	private ArrayList<ClientHandler> clients;
+	
 	public ClientHandler(Socket clientSocket, ArrayList<ClientHandler> clients) throws IOException
 	{
 		//socket connection passed from server
@@ -68,8 +71,6 @@ public class ClientHandler implements Runnable
 	}//end of constructor 
 	
 	
-	public Boolean getCoordinator() 
-	{
-		return true;
-	}
+	
+	
 }//end of class

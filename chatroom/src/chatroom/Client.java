@@ -14,9 +14,9 @@ public class Client
 	private String ipAddress;
 	private int port;
 	
-	private Socket socket;	
-	private BufferedReader clientInput; //client input to be taken from keyboard
-	private DataOutputStream out;		//data to be streamed out via socket
+	private Socket socket;						//client socket
+	private BufferedReader clientInput; 		//client input to be taken from keyboard
+	private static DataOutputStream out;		//data to be streamed out via socket
 	
 	
 	//constructor method
