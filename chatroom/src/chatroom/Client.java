@@ -14,15 +14,15 @@ public class Client
 	private String ipAddress;
 	private int port;
 	
-	private Socket socket;
-	private BufferedReader clientInput;
-	private DataOutputStream out;
+	private Socket socket;	
+	private BufferedReader clientInput; //client input to be taken from keyboard
+	private DataOutputStream out;		//data to be streamed out via socket
 	
 	
 	//constructor method
 	public Client(String userName, String ipAddress, int port) throws IOException
 	{
-		//with doing this you can't access these values outside of class, refer to client demo
+		//without doing this you can't access these values outside of class, refer to client demo
 		this.userName = userName;
 		this.ipAddress = ipAddress;
 		this.port = port;
@@ -33,8 +33,10 @@ public class Client
 		System.out.println("Connected to Server");
 			
 		
-		//blocking call????
+		//input reader is created
 		clientInput = new BufferedReader(new InputStreamReader(System.in));	
+		
+		//output stream is created
 		out = new DataOutputStream(socket.getOutputStream());
  	
 	
@@ -42,10 +44,15 @@ public class Client
 		while (!message.equals("Stop")) 
 		{
 			System.out.print("> ");
+			
+			//input is taken from keyboard
 			message = clientInput.readLine();
+			
+			//message is sent to output stream
 			out.writeUTF(message);
 		}
 		
+		//streams and sockets are closed, once loop is terminated
 		clientInput.close();
 		out.close();
 		socket.close();
@@ -56,6 +63,7 @@ public class Client
 	
 	public static void main(String[] args) throws IOException
 	{
+		
 		//Server server = new Server(9090);
 		Client client = new Client("Caman177" , "127.0.0.1" , 9090);
 

@@ -8,36 +8,46 @@ import java.util.concurrent.Executors;
 public class Server 
 {
 	//RESEARCH THESE OBJECTS!!!
-	private ServerSocket listener;
-	private Socket client;
-	private DataInputStream in; //<- should this be out or in??
-	private static ArrayList<ClientHandler> clients = new ArrayList<>();
+	
+	//a server socket waits for incoming client requests
+	private ServerSocket listener;	//used to listen for port
+	private Socket client;			//actual port
+	//private DataInputStream in; 	//input stream from client
+	
+	private static ArrayList<ClientHandler> clients = new ArrayList<>();	//array list to store clientHandler objects
+	
 	private static ExecutorService pool = Executors.newFixedThreadPool(4);
 	
 	
 	//constructor method
 	public Server(int port) throws IOException
 	{
-			//ServerSocket object is instantiated, SERVER IS CREATED
+			//ServerSocket object is under the same listener, constructor argument is used as port
 			listener = new ServerSocket(port);
 			System.out.println("server intialised under port: " + port);
 		
 			
+			//this code is now in a loop, as we want to accept more than once client
 			while (true) 
 			{
-				//two ports connected, CLIENT IS CONNECTED
-				//blocking operating
+			
+				System.out.println("---------------------------------");
 				System.out.println("Waiting for client connection");
-				client = listener.accept();
+		
+				//when a connection is accepted, a socket object is created on server side which = client
+				client = listener.accept();		//blocking operation
+				
+				
 				System.out.println("Client accepted, handshake formed");
+
 				
-				//client handler object is created
-				ClientHandler clientThread = new ClientHandler(client);
+				//client handler object is created, client socket is passed in
+				ClientHandler clientThread = new ClientHandler(client, clients);
 				
-				//adds client thread object to array list
+				//stores client thread in arraylist
 				clients.add(clientThread);
-				//fucking fix this
-				if(clientThread.getCoordinator());{}
+				
+				//??
 				pool.execute(clientThread);
 			}
 	}//end of constructor
