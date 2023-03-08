@@ -1,73 +1,115 @@
 package chatroom;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client 
 {
-	//instance variables
-	//should this be private???
-	public String userName;
-	private String ipAddress;
-	private int port;
+	private Socket socket;
+	private BufferedReader in;
+	private BufferedWriter out;
 	
-	private Socket socket;						//client socket
-	private BufferedReader clientInput; 		//client input to be taken from keyboard
-	private static DataOutputStream out;		//data to be streamed out via socket
-	
-	
-	//constructor method
-	public Client(String userName, String ipAddress, int port) throws IOException
+	private String username;
+
+	public Client(Socket socket, String username)
 	{
-		//without doing this you can't access these values outside of class, refer to client demo
-		this.userName = userName;
-		this.ipAddress = ipAddress;
-		this.port = port;
-		
-		
-		//client socket is created
-		socket = new Socket(ipAddress, port);
-		System.out.println("Connected to Server");
-			
-		
-		//input reader is created
-		clientInput = new BufferedReader(new InputStreamReader(System.in));	
-		
-		//output stream is created
-		out = new DataOutputStream(socket.getOutputStream());
- 	
-	
-		String message = "";
-		while (!message.equals("Stop")) 
+		try 
 		{
-			System.out.print("> ");
+			this.socket = socket;
+		
+			this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.username = username;
+		} 
+		
+		catch(IOException e) 
+		{
+			closeAll(socket, in, out);
+		}
+	}
+	
+	
+	public void sendMessage() 
+	{
+		try 
+		{
+			out.write(username);
+			out.newLine();
+			out.flush();
 			
-			//input is taken from keyboard
-			message = clientInput.readLine();
-			
-			//message is sent to output stream
-			out.writeUTF(message);
+			Scanner scanner = new Scanner(System.in);
+			while(socket.isConnected()) 
+			{
+				String message = scanner.nextLine();
+				out.write(username + ": " + message);
+				out.newLine();
+				out.flush();
+			}
 		}
 		
-		//streams and sockets are closed, once loop is terminated
-		clientInput.close();
-		out.close();
-		socket.close();
-	
-		
-	}//end of constructor method 
-
-	
-	public static void main(String[] args) throws IOException
-	{
-		
-		//Server server = new Server(9090);
-		Client client = new Client("Caman177" , "127.0.0.1" , 9090);
-
+		catch(IOException e) 
+		{
+			closeAll(socket, in, out);
+		}
 	}
-
 	
-}//end of class
+	
+	public void listenForMessage() 
+	{
+		new Thread(new Runnable() 
+		{
+			@Override
+			public void run() 
+			{
+				String msgFromGroup;
+				
+				while(socket.isConnected()) 
+				{
+					try 
+					{
+	
+						msgFromGroup = in.readLine();
+						System.out.println(msgFromGroup);
+					} catch (IOException e) {closeAll(socket, in, out);}
+				}
+			}
+		}).start();
+	}
+	
+	
+	public void closeAll(Socket socket, BufferedReader in, BufferedWriter out) 
+	{
+		try 
+		{
+			if(in != null){in.close();}
+			if(out != null){out.close();}
+			if(socket != null){socket.close();}
+		}
+		catch (IOException e){e.printStackTrace();}
+	}
+	
+	
+	
+	
+	public static void main(String[] args) throws UnknownHostException, IOException 
+	{
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Enter your username for the group chat: ");
+		String username = scanner.nextLine();
+		
+		Socket socket = new Socket("localhost", 9090);
+		Client client = new Client(socket, username);
+		
+		client.listenForMessage();
+		client.sendMessage();
+		
+		scanner.close();
+	}
+	
+} //end of class

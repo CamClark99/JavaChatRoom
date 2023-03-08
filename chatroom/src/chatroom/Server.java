@@ -1,66 +1,73 @@
- package chatroom;
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+package chatroom;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
+/**
+ * 
+ * @author cameronclark
+ * 
+ */
 public class Server 
 {
-	//RESEARCH THESE OBJECTS!!!
+	//instance variables
+	private ServerSocket listener;	//Object is used to wait for connection
 	
-	//a server socket waits for incoming client requests
-	private ServerSocket listener;	//used to listen for port
-	private Socket client;			//actual port
-	//private DataInputStream in; 	//input stream from client
-	
-	private static ArrayList<ClientHandler> clients = new ArrayList<>();	//array list to store clientHandler objects
-	
-	private static ExecutorService pool = Executors.newFixedThreadPool(4);
-	
-	
+
 	//constructor method
-	public Server(int port) throws IOException
+	public Server(ServerSocket listener) 
 	{
-			//ServerSocket object is under the same listener, constructor argument is used as port
-			listener = new ServerSocket(port);
-			System.out.println("server intialised under port: " + port);
+		this.listener = listener;
+	} 
+	
+	
+	public void startServer() 
+	{
+		System.out.println("Server Running..");
+		try 
 		
-			
-			//this code is now in a loop, as we want to accept more than once client
-			while (true) 
+		{	
+			//while listener socket is open
+			while(!listener.isClosed()) 
 			{
-			
-				System.out.println("---------------------------------");
-				System.out.println("Waiting for client connection");
-		
-				//when a connection is accepted, a socket object is created on server side which = client
-				client = listener.accept();		//blocking operation
+				//outputs a client socket once a connection is accepted
+				Socket socket = listener.accept();
 				
+				System.out.println("A new client has connected..");
 				
-				System.out.println("Client accepted, handshake formed");
-
+				//passes through socket object
+				ClientHandler clientHandler = new ClientHandler(socket);
 				
-				//client handler object is created, client socket is passed in
-				ClientHandler clientThread = new ClientHandler(client, clients);
+				//creates thread of clienthandler
+				Thread thread = new Thread(clientHandler);
 				
-				//stores client thread in arraylist
-				clients.add(clientThread);
-				
-				//??
-				pool.execute(clientThread);
+				//runs thread
+				thread.start();
 			}
-	}//end of constructor
-	
-	
-	public static void main(String[] args) throws IOException
-	{
-		Server server = new Server(9090);
-		//Client client = new Client("Caman177" , "127.0.0.1" , 9090);
-
+		}
+		
+		catch (IOException e) {System.out.println(e);}
 	}
-
-} // End of Class
-
-//incoming.accept = blocking operation/call - read up on this
-//server blocking operation will end when a client socket is accepted/constructed
+	
+	
+	public void closeServerSocket()
+	{
+		try{if (listener != null) {listener.close();}}
+		catch (IOException e ) {e.printStackTrace();}
+	}
+	
+	
+	
+	
+	public static void main(String[] args) throws IOException 
+	{
+		//
+		Server server = new Server(new ServerSocket(9090));
+		
+		//
+		server.startServer();
+	}
+	
+} //end of class
