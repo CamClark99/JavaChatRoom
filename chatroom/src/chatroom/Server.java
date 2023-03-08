@@ -1,6 +1,9 @@
 package chatroom;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server 
 {
@@ -8,6 +11,9 @@ public class Server
 	private ServerSocket listener;
 	private Socket client;
 	private DataInputStream in; //<- should this be out or in??
+	private static ArrayList<ClientHandler> clients = new ArrayList<>();
+	private static ExecutorService pool = Executors.newFixedThreadPool(4);
+	
 	
 	//constructor method
 	public Server(int port) throws IOException
@@ -17,38 +23,24 @@ public class Server
 			System.out.println("server intialised under port: " + port);
 		
 			
-			
-			//two ports connected, CLIENT IS CONNECTED
-			//blocking operating
-			System.out.println("Waiting for client connection");
-			client = listener.accept();
-			System.out.println("Client accepted, handshake formed");
-			
-			
-			
-			
-			//takes input from client socket
-			in = new DataInputStream(new BufferedInputStream(client.getInputStream()));
-			
-			//declares empty string allowing while loop to run
-			String message = "";
-			//while client message unequal to stop
-			while(!message.equals("stop")) 
+			while (true) 
 			{
-				//read input from client, and give value to var message
-				message = in.readUTF();
-				System.out.println(message);
+				//two ports connected, CLIENT IS CONNECTED
+				//blocking operating
+				System.out.println("Waiting for client connection");
+				client = listener.accept();
+				System.out.println("Client accepted, handshake formed");
+				
+				//client handler object is created
+				ClientHandler clientThread = new ClientHandler(client);
+				
+				//adds client thread object to array list
+				clients.add(clientThread);
+				//fucking fix this
+				if(clientThread.getCoordinator());{}
+				pool.execute(clientThread);
 			}
-			
-			
-			
-			
-			
-			//when loop is broken/termination value is entered, close client connection and inputstream
-			System.out.println("Closing connection...");
-			client.close();
-			in.close();
-	}
+	}//end of constructor
 	
 	
 	public static void main(String[] args) throws IOException
