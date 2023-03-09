@@ -8,18 +8,20 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ClientHandler implements Runnable
+public class ClientHandler implements Runnable 
 {
-	//why static?
+	//why static? | allows sharing accross all instances
 	public static ArrayList<ClientHandler> clientHandlers = new ArrayList();
 	
-	private Socket socket;
+	private Socket socket;			//accepted connection socket
 	private BufferedReader in;		//receives data
 	private BufferedWriter out;		//outputs data
 	
 	private String clientUsername;
 	private Boolean isCoordinator;
 	
+	
+	//constructor method
 	public ClientHandler(Socket socket) 
 	{
 		try 
@@ -44,22 +46,56 @@ public class ClientHandler implements Runnable
 		}
 		
 		catch(IOException e) {closeAll(socket, in, out);}
-	}
+	} //end of constructor
+	
+	
 	
 	//where client input comes in
 	@Override
 	public void run() 
 	{
+		
 		String message;
+		
+		sendToSelf("Type /help for a list of commands, or type anything to broadcast a message to all conneted clients.");
 		
 		while(socket.isConnected()) 
 		{
 			try 
 			{
-				
+				//reads data sent from data stream REVISE
+				//takes input or reads from console?
 				message = in.readLine();
-				broadcast(message);
 			
+				
+				
+				//if message sent from client contains a command (starts with a /)
+				if(containsCommand(message))
+				{
+					//separates command from message and stores in string
+					String command = message.split(" ")[1];
+					
+					switch(command) 
+					{
+						case "/help":
+							sendToSelf("Here is a list of commands!");	
+							break;
+						
+						case "/kick":
+							//implement kick feature, only coordinator can do this
+							break;
+						
+						case "/tell":
+							//UNFINISHED
+							String username = message.split(" ")[2];
+							message = message.split(" ")[3];
+							privateMessage(message, username);
+							break;
+					
+					}
+				}
+				
+				else{broadcast(message);}
 			} 
 			
 			catch(IOException e) 
@@ -68,8 +104,27 @@ public class ClientHandler implements Runnable
 				break;
 			} 
 		}
+	} //end of run
+	
+	
+	
+	//tests to see if command character has been entered by client
+	// class methods
+	
+	//tests for command from client
+	public Boolean containsCommand(String message) 
+	{
+		if(message.split(" ")[1].startsWith("/")) 
+		{
+			return true;
+		}
+		else {return false;}
 	}
 	
+	
+	
+	//broadcasts message to all clients except sender
+	//broadcasts message to all except sender
 	public void broadcast(String message) 
 	{
 		for(ClientHandler clients : clientHandlers) 
@@ -89,20 +144,68 @@ public class ClientHandler implements Runnable
 	}
 	
 	
-	public void setCoordinator() 
+	
+	//sends message to specified user
+	public void privateMessage(String message, String userName) 
 	{
-		if (clientHandlers.isEmpty())
+		for(ClientHandler clients : clientHandlers) 
 		{
-			//this.isCoordinator = true; - implement later
-			broadcast(clientUsername + "is the Coordinator");
-		}
-		else if(!clientHandlers.isEmpty()) 
-		{
-			broadcast("there is already a Coordinator");
+			try 
+			{
+				if(clients.clientUsername.equals(userName))
+				{
+					clients.out.write(clientUsername + message);
+					clients.out.newLine();
+					clients.out.flush();
+				}
+			}
+			catch (IOException e) {closeAll(socket, in, out);}
 		}
 	}
 	
 	
+	//broadcasts message to all clients including sender
+	//broadcasts to every user, including client sending the message
+	public void sendToAll(String message) 
+	{
+		for(ClientHandler clients : clientHandlers) 
+		{
+			try 
+			{
+					clients.out.write(message);
+					clients.out.newLine();
+					clients.out.flush();
+			}
+			catch (IOException e) {closeAll(socket, in, out);}
+		}
+	}
+	
+	
+	
+	//add description
+	//sends message to self
+	public void sendToSelf(String message) 
+	{
+		for(ClientHandler clients : clientHandlers) 
+		{
+			try 
+			{
+				//sends message to self
+				if (clients.clientUsername.equals(clientUsername))
+				{
+					clients.out.write(message);
+					clients.out.newLine();
+					clients.out.flush();
+				}
+			}
+			catch (IOException e) {closeAll(socket, in, out);}
+		}
+	}
+	
+	
+	
+	//add description
+	//removes specified client
 	public void removeClient()
 	{
 		clientHandlers.remove(this);// Revise
@@ -110,6 +213,8 @@ public class ClientHandler implements Runnable
 	}
 
 
+	
+	//closes socket and streams
 	public void closeAll(Socket socket, BufferedReader in, BufferedWriter out) 
 	{
 		removeClient();
@@ -121,5 +226,6 @@ public class ClientHandler implements Runnable
 		}
 		catch (IOException e){e.printStackTrace();}
 	}
-}
+
+} //end of class
 

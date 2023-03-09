@@ -35,6 +35,7 @@ public class Client
 	}
 	
 	
+	//sends message to client handler??? figure this part out 
 	public void sendMessage() 
 	{
 		try 
@@ -60,6 +61,7 @@ public class Client
 	}
 	
 	
+	//revise
 	public void listenForMessage() 
 	{
 		new Thread(new Runnable() 

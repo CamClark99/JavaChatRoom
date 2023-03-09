@@ -19,6 +19,7 @@ public class Server
 	//constructor method
 	public Server(ServerSocket listener) 
 	{
+		//assign listener object as instance variable
 		this.listener = listener;
 	} 
 	
@@ -33,7 +34,7 @@ public class Server
 			while(!listener.isClosed()) 
 			{
 				//outputs a client socket once a connection is accepted
-				Socket socket = listener.accept();
+				Socket socket = listener.accept();	//blocking method
 				
 				System.out.println("A new client has connected..");
 				
