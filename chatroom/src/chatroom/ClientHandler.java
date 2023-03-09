@@ -18,6 +18,7 @@ public class ClientHandler implements Runnable
 	private BufferedWriter out;		//outputs data
 	
 	private String clientUsername;
+	private Boolean isCoordinator;
 	
 	public ClientHandler(Socket socket) 
 	{
@@ -34,8 +35,9 @@ public class ClientHandler implements Runnable
 			//username data is taken from stream
 			this.clientUsername = in.readLine();
 		
-			//no fucking idea
+			//revise
 			clientHandlers.add(this);
+			
 			
 			broadcast("Server: " + clientUsername + " has entered the chat");
 		
@@ -54,24 +56,9 @@ public class ClientHandler implements Runnable
 		{
 			try 
 			{
+				
 				message = in.readLine();
 				broadcast(message);
-				
-				if(message.startsWith("/")) 
-				{
-					if(message.contains("help")) 
-					{
-						for(ClientHandler clients : clientHandlers) 
-						{
-							if(clients.clientUsername.equals(clientUsername)) 
-							{
-								clients.out.write("here is a list of all commants:");
-								clients.out.newLine();
-								clients.out.flush();
-							}
-						}
-					}
-				}
 			
 			} 
 			
@@ -102,18 +89,23 @@ public class ClientHandler implements Runnable
 	}
 	
 	
-	public void getCoordinator() 
+	public void setCoordinator() 
 	{
 		if (clientHandlers.isEmpty())
 		{
-			
+			//this.isCoordinator = true; - implement later
+			broadcast(clientUsername + "is the Coordinator");
+		}
+		else if(!clientHandlers.isEmpty()) 
+		{
+			broadcast("there is already a Coordinator");
 		}
 	}
 	
 	
 	public void removeClient()
 	{
-		clientHandlers.remove(this);// how the fuck does this work
+		clientHandlers.remove(this);// Revise
 		broadcast("Server: " + clientUsername + " has left the chat");
 	}
 
