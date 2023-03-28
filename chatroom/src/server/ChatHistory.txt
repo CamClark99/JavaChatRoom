@@ -1,0 +1,42 @@
+*** user1 has joined the chat room. *** 
+*** The coordinator is (admin)user1 *** 
+*** radi has joined the chat room. *** 
+*** user3 has joined the chat room. *** 
+*** The coordinator is (admin)radi *** 
+*** (admin)user1 has left the chat room. *** 
+ *** New coordinator is (admin)radi *** 
+*** user1 has joined the chat room. *** 
+*** The coordinator is (admin)user1 *** 
+*** user3 has joined the chat room. *** 
+*** user1 has joined the chat room. *** 
+Admin is (admin)user1
+*** radi has joined the chat room. *** 
+The admin is: (admin)radi
+*** radi has joined the chat room. *** 
+*** radi has joined the chat room. *** 
+*** radi has joined the chat room. *** 
+*** Cameron has joined the chat room. *** 
+*** James has joined the chat room. *** 
+(admin)Cameron: USEs
+*** (admin)Cameron has left the chat room. *** 
+ *** New coordinator is (admin)James *** 
+*** (admin)James has left the chat room. *** 
+*** James has joined the chat room. *** 
+(admin)James: USERS]
+*** James has joined the chat room. *** 
+*** James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** (admin)James has left the chat room. *** 
+*** Cameron has joined the chat room. *** 
+*** James has left the chat room. *** 
+*** Jonny has joined the chat room. *** 
+(admin)Cameron: hello
+(admin)Cameron: whats up
+*** (admin)Cameron has left the chat room. *** 
+ *** New coordinator is (admin)Jonny *** 
+*** Cameron has left the chat room. *** 
+*** sage has joined the chat room. *** 
