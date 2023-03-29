@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 
-public class MessageUtils implements Serializable {
+public class MessageUtils implements Serializable {//?????????!!!
 	// The different types of message sent by the Client
 	public static final int USERS = 0;   // Message type to request list of connected users
 	public static final int MESSAGE = 1; // Message type for regular text messages

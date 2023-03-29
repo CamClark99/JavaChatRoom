@@ -23,7 +23,7 @@ public class NetworkClient {
     private final String username;  		// Client username
     private final int port;  				// Port number to connect to
 
-    // Constructor
+    // Constructor !!!!!
     public NetworkClient(String server, int port, String username) 
     {
         //instance VARS
@@ -45,7 +45,6 @@ public class NetworkClient {
             sOutput = new ObjectOutputStream(socket.getOutputStream());
             sInput = new ObjectInputStream(socket.getInputStream());
             
-            //IS THIS LINE EVER SEEN?
             System.out.println("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
             // Start a new thread to listen for messages from the server
             new ListenFromServer().start();
@@ -82,7 +81,7 @@ public class NetworkClient {
         }
         catch (IOException e)
         {
-            System.err.println("Exception writing to server: " + e);
+            System.err.println("Exception occured while attempting to write to the server: " + e);
         }
     }
 
@@ -111,7 +110,7 @@ public class NetworkClient {
     }
 
     
-    // Inner thread, used to listen for messages sent from the server
+    // Inner thread class, used to listen for incoming messages sent from the server
     class ListenFromServer extends Thread 
     {
         public void run() 

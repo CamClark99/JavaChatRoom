@@ -1,8 +1,5 @@
 package client;
 
-import java.io.IOException;
-
-
 /*
  * This class represents a simple chat client which handles the functionality of setting a
  * specified IP address, port number, and user-name via command line arguments. //CHANGE
@@ -20,7 +17,6 @@ public class ChatClient {
     //why 
 	private static String setIP(String[] args) 
 	{
-		//NOT SURE ABOUT THIS
 		// Define a regular expression pattern to validate IP addresses
 		String ipPattern = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                 "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
@@ -83,7 +79,12 @@ public class ChatClient {
         {
             // Throw an IllegalArgumentException if the username is exceeds 20 characters
             throw new IllegalArgumentException("Username cannot be longer than 20 characters.");
-        } 
+        }
+        else if (username.length() <= 2) 
+        {
+        	// Throw an IllegalArgumentException if the username is less than or equal to 2 characters
+            throw new IllegalArgumentException("Username must be at least 3 characters long.");
+        }
         else if (username.matches("(?i).*\\b(admin)\\b.*")) 
         {
             // Throw a SecurityException if the username contains the word "admin"
@@ -94,7 +95,7 @@ public class ChatClient {
 	
 	
 	// Driver class
-    public static void main(String[] args) throws Exception 
+    public static void main(String[] args)
     {
     	ChatClient chatClient = new ChatClient();
     	
@@ -122,6 +123,7 @@ public class ChatClient {
             if (networkClient.isConnected())
             {
             // Create a new UserInput object and pass in the client
+            	//IS THIS BAD BCOS OBJECTS ARE GETTING MADE ALL THE TIME IDK, maybe move outside of loop
             UserInput userInput = new UserInput(networkClient);
             // Call the handleUserInput() method to handle user input
             userInput.displayCommands();

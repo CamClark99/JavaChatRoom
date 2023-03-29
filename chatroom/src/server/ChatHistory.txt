@@ -40,3 +40,53 @@ The admin is: (admin)radi
  *** New coordinator is (admin)Jonny *** 
 *** Cameron has left the chat room. *** 
 *** sage has joined the chat room. *** 
+*** sage has joined the chat room. *** 
+*** (admin)sage has left the chat room. *** 
+*** sage has joined the chat room. *** 
+*** (admin)sage has left the chat room. *** 
+*** (admin)sage has left the chat room. *** 
+*** sage has joined the chat room. *** 
+(admin)sage: hello
+(admin)sage: awsdawd
+*** (admin)sage has left the chat room. *** 
+*** sage has joined the chat room. *** 
+(admin)sage: aoswk
+(admin)sage: hello
+*** (admin)sage has left the chat room. *** 
+*** sage has joined the chat room. *** 
+(admin)sage: hello
+(admin)sage: sdsdfsdf
+*** sage has joined the chat room. *** 
+(admin)sage: hello
+*** (admin)sage has left the chat room. *** 
+*** sage has joined the chat room. *** 
+*** Cameron has joined the chat room. *** 
+(admin)sage: hello
+(admin)sage: whats up
+*** Cameron has left the chat room. *** 
+*** (admin)sage has left the chat room. *** 
+*** Cameron has joined the chat room. *** 
+*** Sage has joined the chat room. *** 
+*** (admin)Cameron has left the chat room. *** 
+ *** New coordinator is (admin)Sage *** 
+*** Sage has joined the chat room. *** 
+*** Cameron has joined the chat room. *** 
+(admin)Sage: hello
+*** AB has joined the chat room. *** 
+AB: awdawd
+Cameron: k;
+*** AB has left the chat room. *** 
+*** AB has joined the chat room. *** 
+(admin)AB: hello
+(admin)AB: ficl
+(admin)AB: wju]awdi
+*** Aopkko has joined the chat room. *** 
+*** Aopkko has left the chat room. *** 
+*** Aopkko has left the chat room. *** 
+*** Aopkkoasd has joined the chat room. *** 
+*** A has joined the chat room. *** 
+*** A has left the chat room. *** 
+*** Cameron has joined the chat room. *** 
+(admin)Cameron: awdawd
+(admin)Cameron: awdawd
+*** James has joined the chat room. *** 

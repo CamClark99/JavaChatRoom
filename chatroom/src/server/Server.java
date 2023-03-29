@@ -15,30 +15,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /*
  * Class responsible for managing the server,
- * accepting incoming connections, and broadcasting messages to clients.
+ * accepting incoming connections, and broadcasting messages to clients
  */
+
 public class Server 
 {
+	private final int port; 										// Server port number
+	private final SimpleDateFormat dateFormat; 						// Date format for logging
+	private FileWriter historyFileWriter; 							// File writer for chat history
     private final AtomicInteger uniqueId = new AtomicInteger(0); 	// Unique id for clients
-    private ArrayList<ClientHandler> clientsArray; 					// Array list to hold client handler threads
-    private final SimpleDateFormat dateFormat; 						// Date format for logging
-    private final int port; 										// Server port number
-    private volatile boolean keepGoing = true; 						// Flag to indicate if server is running
-    private FileWriter historyFileWriter; 							// File writer for chat history
     private final HashSet<String> badWords = new HashSet<>(); 		// Set of bad words to filter
-
-    // Constructor that receive the port to listen to for connection as parameter
+    private ArrayList<ClientHandler> clientsArray; 					// Array list to hold client handler threads, WHY DOES IT WORK WITHOUT STATIC!!!
+    
+    // Constructor EXPLAIN
     public Server(int port) 
     {
         this.port = port;
         clientsArray = new ArrayList<>();
-        
         // Set date format
         dateFormat = new SimpleDateFormat("HH:mm:ss");
-        
-        try 
-        {
-            // Open history file for writing
+       
+        // Open history file for writing
+        try {
             historyFileWriter = new FileWriter("src/server/ChatHistory.txt", true);
         } 
         catch (IOException e) 
@@ -60,27 +58,29 @@ public class Server
         {
             System.err.println("Failed to load bad words: " + e.getMessage());
         }
-    }// End of constructor
-
+    }
     
-    // Method to start the server
+    
+    // Method to start the server and spawn client threads
     public void start() 
     {
-        keepGoing = true;
-        // Set of usernames
+        
+        // Set of usernames, IS THIS USED???
         HashSet<String> usernames = new HashSet<>();
         try 
         {
             // Create server socket
             ServerSocket serverSocket = new ServerSocket(port);
             display("Server waiting for Clients on port " + port + ".");
-            while (keepGoing)
-            {
-                // Accept incoming connection
-                Socket socket = serverSocket.accept();
             
+            while (!serverSocket.isClosed())
+            {
+                // Accept incoming connection, assign connected socket to variable
+                Socket socket = serverSocket.accept();
+
                 // Create client handler thread
                 ClientHandler thread = new ClientHandler(socket, true,this, usernames);
+                
                 // Add thread to array list
                 clientsArray.add(thread);
                 thread.start();
@@ -92,10 +92,11 @@ public class Server
                 }
             }
             
+            // Attempt to close server socket and output streams
             try 
             {
                 // Close server socket and client connections
-                serverSocket.close();
+            	serverSocket.close();
                 for (ClientHandler thread : clientsArray)
                 {
                     try 
@@ -112,7 +113,7 @@ public class Server
             } 
             catch (Exception e) 
             {
-                display("Exception closing the server and clients: " + e);
+                display("Exception occured while attempting to close the server and clients: " + e);
             }
         } 
         catch (IOException e) 
@@ -120,16 +121,9 @@ public class Server
             String msg = dateFormat.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
             display(msg);
         }
-    } // End of start method
+    } 
 
-
-    // Getter for unique id
-    public int getUniqueId() {return uniqueId.incrementAndGet();}
-
-    // Getter for array list of client handler threads
-    public ArrayList<ClientHandler> getClients() {return clientsArray;}
-
-    
+   
     // Method to display massages in the console with timestamp
     public void display(String msg) 
     {
@@ -138,9 +132,10 @@ public class Server
     }
 
     
-    // Method to write messages to the clients
+    // Method to write messages to the clients, why is this synchronised
     public synchronized boolean broadcast(String message) 
     {
+    	//check is message is empty, return false if true
         if (message.trim().isEmpty()) 
         {
             // Do nothing if message is empty
@@ -149,8 +144,11 @@ public class Server
         
         // Add timestamp to the message
         String timestamp = dateFormat.format(new Date());
-        // To check if message is private i.e. client to client message
+        
+        // trims string to contain only intended message
         String[] splitMessage = message.split(" ",3);
+      
+        
         if(splitMessage.length < 2) 
         {
             return false;
@@ -169,14 +167,17 @@ public class Server
         // If private message, send message to mentioned username only
         if(isPrivate) 
         {
-            String toCheck = splitMessage[1].substring(1);
-            message = splitMessage[0]  + splitMessage[2];
+            String toCheck = splitMessage[1].substring(1);	//username of recipient
+            System.out.println(toCheck + "this is toCheckString");
+            message = splitMessage[0]  + splitMessage[2];		// message to send
+            System.out.println(message + "this is message var");
             boolean found = false;
             
             // Loop in reverse order to find the mentioned username
             for(int y = clientsArray.size(); --y>=0;) 
             {
                 ClientHandler currentClient = clientsArray.get(y);
+                
                 String check = currentClient.getUsername();
                 String clientInfo = "(" + currentClient.getIpAddress() + ")";
                 String[] splitMessageOnly = message.split(":");
@@ -231,8 +232,26 @@ public class Server
             }
         }
         return true;
-    }// End of broadcast method
+    }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // Method to check if message contains a bad word
     public boolean containsBadWord(String message)
@@ -321,7 +340,17 @@ public class Server
     }
 
     
-    // The main method of the program
+    // Getter for unique id | IS THIUS USED 
+    public int getUniqueId() {return uniqueId.incrementAndGet();}
+    
+
+    // Getter for array list of client handler threads
+    public ArrayList<ClientHandler> getClients() {return clientsArray;} 
+    
+
+
+    
+    // Driver class
     public static void main(String[] args) 
     {
         // Default port number we are going to use

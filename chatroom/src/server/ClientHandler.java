@@ -27,6 +27,7 @@ public class ClientHandler extends Thread {
     private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");  // A formatter for timestamps
     private final String ipAddress;  // The IP address of the client
     private HashSet<String> usernames;  // A set of all usernames currently in use WHAT THIS FOR
+    //EVERYONE SHOULD HAVE A LOCAL LIST OF MEMBERS
 
 
     // Constructor for the client handler thread
@@ -78,6 +79,7 @@ public class ClientHandler extends Thread {
             // Add the client's username to the set of usernames in use, and notify all clients that the client has joined
             usernames.add(this.username);
             server.broadcast("*** " + username + " has joined the chat room." + " *** ");
+            // ADD REMOVE METHOD 
         } 
         catch (IOException | ClassNotFoundException e) 
         {
