@@ -20,13 +20,13 @@ public class UserInput
         scanner = new Scanner(System.in);
     }
 
-    
+    // Method to display the welcome message and instructions to the user.
     public void displayCommands() 
     {
-        final String usernameColor = "\033[35m";  // ANSI color code for purple
-        final String resetColor = "\033[0m";   	  // ANSI color code to reset color
+        final String usernameColor = "\033[35m";  // ANSI color code for purple.
+        final String resetColor = "\033[0m";   // ANSI color code to reset color.
 
-        // Print the welcome message and instructions to the user
+        // Print the welcome message and instructions to the user.
         System.out.println(usernameColor + "Hey " + "\033[32m" + client.getClientUsername() + usernameColor + ", welcome to the Chatroom!" + "\n");
         System.out.println(usernameColor + "Instructions:" + resetColor);
         System.out.println(usernameColor + "1. To send a message to all active clients, simply type your message." + resetColor);
@@ -41,13 +41,13 @@ public class UserInput
     {
     	try
     	{
-    		// Keep reading user input until termination command is entered
+    		// Keep reading user input until the user logs out.
             while (true)
             {
                 System.out.print("> ");
                 String msg = scanner.nextLine();
                 
-                // If the message is empty, print an error message and continue
+                // If the message is empty, print an error message and continue.
                 if (msg.isEmpty()) 
                 {
                     System.out.println("*** Message cannot be empty. ***");
@@ -59,18 +59,20 @@ public class UserInput
                     client.sendMessage(new MessageUtils(MessageUtils.LOGOUT, ""));
                     break;
                 }
-                // If the user types "USERS", send a USERS message to the server
+                // If the user types "USERS", send a USERS message to the server.
                 else if (msg.equals("USERS")) 
                 {
                     client.sendMessage(new MessageUtils(MessageUtils.USERS, ""));
                 }
-                // If the admin types "KICK username", send a KICK message to the server with the username of the client to be kicked
+                // If the admin types "KICK username", send a KICK message to the server with the username of the client to be kicked.
                 else if (msg.startsWith("KICK")) 
                 {
                     if (msg.length() > 5) 
                     {
                         client.sendMessage(new MessageUtils(MessageUtils.KICK, msg.substring(5)));
                     }
+
+                    // Otherwise, send a "MESSAGE" message to the server with the user's input.
                     else 
                     {
                         System.out.println("*** KICK command must include a username. ***");
@@ -90,7 +92,7 @@ public class UserInput
         } 
         finally 
         {
-        	// close scanner object
+            // Close the scanner
             scanner.close();
         }
     }

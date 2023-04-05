@@ -15,7 +15,6 @@ import java.net.Socket;
 
 //This class contains the network code for the chat client, handling connections
 public class NetworkClient {
-	//why final?
     private ObjectOutputStream sOutput; 	// Output stream to the server
     private ObjectInputStream sInput;  		// Input stream from the server
     private Socket socket;  				// Socket to connect to the server
@@ -23,7 +22,7 @@ public class NetworkClient {
     private final String username;  		// Client username
     private final int port;  				// Port number to connect to
 
-    // Constructor !!!!!
+    // Constructor for the NetworkClient class
     public NetworkClient(String server, int port, String username) 
     {
         //instance VARS
@@ -34,7 +33,6 @@ public class NetworkClient {
 
     
     // Method to connect to the server
-    // this shouldn't really be boolean
     public boolean isConnected()
     {
         try 
@@ -62,11 +60,13 @@ public class NetworkClient {
     }
 
     
-    // Method to get the client's username IS THIS USED? !!!!
+    // Method to get the client's username
     public String getClientUsername() 
     {
         return username;
     }
+
+
 
     // Method to send a message to the server
     public void sendMessage(MessageUtils msg) 
@@ -85,7 +85,7 @@ public class NetworkClient {
         }
     }
 
-    //AMEND
+
     // Method to disconnect from the server
     public void closeAll()
     {
@@ -105,7 +105,7 @@ public class NetworkClient {
         } 
         catch (IOException e) 
         {
-            System.err.println("Exception occured while attempting to close socket and open streams: " + e);
+            System.err.println("Exception occurred while attempting to close socket and open streams: " + e);
         }
     }
 
@@ -136,7 +136,6 @@ public class NetworkClient {
             }
         }
     }
-
 
 
 }

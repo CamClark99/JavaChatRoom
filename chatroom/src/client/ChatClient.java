@@ -6,17 +6,16 @@ package client;
  */
 
 public class ChatClient {
-	//ALL OF THESE ARE PRIVATE SO THEY CANNOT BE SET OR ACCESSED OUTSIDE OF THIS CLASS, USING SETTERS
 	// Set default values for connection parameters
     private String address = "127.0.0.1";
     private String username = "";
     private int port = 1500;
 	
     
-	//private and static bcos they are only used in this class
-    //why 
-	private static String setIP(String[] args) 
+	// Sets the IP address for the server to connect to
+	public static String setIP(String[] args)
 	{
+		//NOT SURE ABOUT THIS
 		// Define a regular expression pattern to validate IP addresses
 		String ipPattern = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                 "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
@@ -38,7 +37,7 @@ public class ChatClient {
 	
 	
 	// Sets client port
-	private static int setPort(String[] args) 
+	public static int setPort(String[] args)
 	{
 		   try 
            {
@@ -79,12 +78,7 @@ public class ChatClient {
         {
             // Throw an IllegalArgumentException if the username is exceeds 20 characters
             throw new IllegalArgumentException("Username cannot be longer than 20 characters.");
-        }
-        else if (username.length() <= 2) 
-        {
-        	// Throw an IllegalArgumentException if the username is less than or equal to 2 characters
-            throw new IllegalArgumentException("Username must be at least 3 characters long.");
-        }
+        } 
         else if (username.matches("(?i).*\\b(admin)\\b.*")) 
         {
             // Throw a SecurityException if the username contains the word "admin"
@@ -115,7 +109,7 @@ public class ChatClient {
         	chatClient.username=setUsername(args);
         }
         
-        //WE HERE
+
         // Create a new network client object, passing in command line parameters
         NetworkClient networkClient = new NetworkClient(chatClient.address, chatClient.port, chatClient.username);
 
@@ -123,12 +117,10 @@ public class ChatClient {
             if (networkClient.isConnected())
             {
             // Create a new UserInput object and pass in the client
-            	//IS THIS BAD BCOS OBJECTS ARE GETTING MADE ALL THE TIME IDK, maybe move outside of loop
             UserInput userInput = new UserInput(networkClient);
             // Call the handleUserInput() method to handle user input
             userInput.displayCommands();
             userInput.handleInput();
-            } 
-           
+            }
     }
 }
